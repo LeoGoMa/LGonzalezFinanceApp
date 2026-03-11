@@ -18,7 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,6 +41,15 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier) {
+    val transactions = listOf(
+        Transaction("BodegaAurrera", "Juguetes", 67.67, "10:30 AM", Icons.Default.ShoppingCart),
+        Transaction("Oxxo Gas", "LaDeLimon", 200.00, "12:15 PM", Icons.Default.ShoppingCart),
+        Transaction("Cafeteria Uni", "Quekas", 23.75, "8:00 AM", Icons.Default.ShoppingCart),
+        Transaction("Amazon", "Rtx5090", 1200000.0, "3:45 PM", Icons.Default.ShoppingCart),
+        Transaction("Steam", "Mewgenics", 254.99, "2:00 PM", Icons.Default.ShoppingCart),
+        Transaction("SushiRoll", "chuchi", 230.0, "7:30 PM", Icons.Default.ShoppingCart)
+    )
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -51,6 +59,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(24.dp))
         SummaryCardsSection()
         Spacer(modifier = Modifier.height(24.dp))
+        TransactionsSection(transactions)
     }
 }
 
@@ -89,7 +98,7 @@ fun HeaderSection(userName: String) {
                 )
             }
         }
-        IconButton(onClick = { /* TODO */ }) {
+        IconButton(onClick = { }) {
             Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu")
         }
     }
@@ -121,7 +130,7 @@ fun SummaryCardsSection() {
             SummaryCardItem(
                 card = SummaryCard(
                     title = "Ventas",
-                    amount = "$911",
+                    amount = "$911.11",
                     backgroundColor = CardPeach
                 ),
                 modifier = Modifier.weight(1f).fillMaxWidth()
@@ -182,6 +191,93 @@ fun SummaryCardItem(card: SummaryCard, modifier: Modifier = Modifier) {
                     fontSize = 16.sp,
                     fontWeight = FontWeight.ExtraBold,
                     color = Color.Black
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun TransactionsSection(transactions: List<Transaction>) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Transactions",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
+            )
+            TextButton(onClick = { }) {
+                Text(text = "See All", color = Color.Gray)
+            }
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        LazyColumn(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            items(transactions) { transaction ->
+                TransactionItem(transaction)
+            }
+        }
+    }
+}
+
+@Composable
+fun TransactionItem(transaction: Transaction) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(48.dp)
+                    .clip(CircleShape)
+                    .background(Color.Black),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = transaction.icon,
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+            Spacer(modifier = Modifier.width(16.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = transaction.establishmentName,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = transaction.category,
+                    fontSize = 14.sp,
+                    color = Color.Gray
+                )
+            }
+            Column(horizontalAlignment = Alignment.End) {
+                val amountText = if (transaction.amount < 0) "$-${-transaction.amount}" else "$${transaction.amount}"
+                Text(
+                    text = amountText,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = transaction.time,
+                    fontSize = 12.sp,
+                    color = Color.Gray
                 )
             }
         }
