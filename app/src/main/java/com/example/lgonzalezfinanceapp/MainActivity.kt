@@ -18,11 +18,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.lgonzalezfinanceapp.ui.theme.LGonzalezFinanceAppTheme
+import com.example.lgonzalezfinanceapp.ui.theme.*
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,7 +49,8 @@ fun HomeScreen(modifier: Modifier = Modifier) {
     ) {
         HeaderSection(userName = "Leonel")
         Spacer(modifier = Modifier.height(24.dp))
-
+        SummaryCardsSection()
+        Spacer(modifier = Modifier.height(24.dp))
     }
 }
 
@@ -88,6 +91,99 @@ fun HeaderSection(userName: String) {
         }
         IconButton(onClick = { /* TODO */ }) {
             Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu")
+        }
+    }
+}
+
+@Composable
+fun SummaryCardsSection() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(200.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        SummaryCardItem(
+            card = SummaryCard(
+                title = "Actividad",
+                subtitle = "de la Semana",
+                amount = "",
+                backgroundColor = CardGreen,
+                icon = Icons.Default.Face
+            ),
+            modifier = Modifier.weight(1f).fillMaxHeight()
+        )
+
+        Column(
+            modifier = Modifier.weight(1f).fillMaxHeight(),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            SummaryCardItem(
+                card = SummaryCard(
+                    title = "Ventas",
+                    amount = "$911",
+                    backgroundColor = CardPeach
+                ),
+                modifier = Modifier.weight(1f).fillMaxWidth()
+            )
+            SummaryCardItem(
+                card = SummaryCard(
+                    title = "Ganancias",
+                    amount = "$67.67",
+                    backgroundColor = CardLavender
+                ),
+                modifier = Modifier.weight(1f).fillMaxWidth()
+            )
+        }
+    }
+}
+
+@Composable
+fun SummaryCardItem(card: SummaryCard, modifier: Modifier = Modifier) {
+    Card(
+        modifier = modifier,
+        shape = RoundedCornerShape(24.dp),
+        colors = CardDefaults.cardColors(containerColor = card.backgroundColor)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            if (card.icon != null) {
+                Icon(
+                    imageVector = card.icon,
+                    contentDescription = null,
+                    modifier = Modifier.size(32.dp)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+            Text(
+                text = card.title,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+                textAlign = TextAlign.Center
+            )
+            if (card.subtitle != null) {
+                Text(
+                    text = card.subtitle,
+                    fontSize = 12.sp,
+                    color = Color.Gray,
+                    textAlign = TextAlign.Center
+                )
+            }
+            if (card.amount.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = card.amount,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = Color.Black
+                )
+            }
         }
     }
 }
